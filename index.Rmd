@@ -1,5 +1,5 @@
 ---
-title: "DraftProject"
+title: "Analysis of Hollywood Movies using Least squares Regression and Quantile Regression"
 output:
   html_document: default
   pdf_document: default
