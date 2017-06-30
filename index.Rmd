@@ -1,0 +1,55 @@
+---
+title: "DraftProject"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Anyone who knows me at all knows that I am a huge movie fan.  This project examines a data set of 876 Hollywood films released from 2007 to 2013, and offers a comparison of the top foreign and domestic-grossing films by film genre.
+
+#### Top Foreign and Domestic-grossing Hollywood Films from 2007 to 2013
+
+I was interested to see which genres of Hollywood films produced between 2007 and 2019 have seen the highest domestic gross and foreign gross.  Specifically, my own favorite movies tend to fall into the comedy, horror, or documentary genres, and I was curious to see if movies in these genres are as high-grossing as other genres.
+
+Considering how much both my American and international friends love movies, my first original hypothesis was that most movies would have similar domestic grosses and foreign grosses, and that action movies would be the largest-grossing overall.
+
+I also wanted to test use two methods of linear regression, least squares regression and quantile regression, to see which more accurately fit the majority of the data.  My second initial hypothesis was that quantile regression would provide a more accurate linear approximation of the median of the data since it is more resistant to outliers than least squares regression.
+
+
+## Scatter Plot
+I first created a scatter plot using R, which shows domestic gross versus foreign gross without classifying the films by genre.  The purpose of this was primarily to see if films which were successful domestically were also successful in the foreign entertainment industry.
+
+![This scatter plot shows the domestic gross of the 876-film dataset versus the foreign gross of the dataset.  Most of the films seem to have similar domestic and foreign grosses, suggesting that most Hollywood films are as popular in foreign countries as they are in the United States and supporting the original hypothesis.]
+
+```{r movies}
+mov <- read.csv("C:/Users/Abby/Documents/School/Summer/STATS_202/HollywoodMoviesdataCSV_Americanized.csv",sep = ";")
+plot(mov$DomesticGross, mov$ForeignGross)
+```
+
+I then created a scatter plot using StatCrunch to see the spread of genres across the data.
+
+![This scatter plot shows the domestic gross of the 876-film dataset versus the foreign gross of the dataset, color-coded by genre.  On average, action and adventure genre movies saw the highest domestic and foreign gross during the 2007-2013 time period.  This supports the second part of my hypothesis, which stated that "action movies would be the largest-grossing overall."  Thriller-genre movies such as The Tourist (2010, one of my personal favorites) generally had the lowest foreign and domestic grosses, except for The Dark Knight Rises (2012), which was the second-highest domestic grossing movie included in the dataset.](C:\Users\Abby\Documents\School\Summer\HollywoodFilmsScatterplotByGenre.PNG)
+
+Finally, I generated a means plot using StatCrunch for both domestic and foreign film gross, grouped by genre:
+
+![This side-by-side comparison of means plots for domestic gross versus foreign gross shows that most genres actually had higher foreign grosses than domestic grosses, contrary to my original hypothesis. This makes sense, since, although it has the third largest population in the world (after China and India), the United States, contains only around five percent of the world population. It makes sense that popular Hollywood films would have a higher foreign gross than domestic gross simply because there are many more foreign movie-lovers than domestic movie-lovers! ](C:\Users\Abby\Documents\School\Summer\DomesticvsForeignGrossMeanComparison.PNG)
+
+I also wanted to explore the differences between the methods of least squares regression and quantile regression.  Both are methods of regressional analysis, but quantile regression is more resistant to outliers and gives a more accurate linear regression for the median of the data. 
+
+```{r Regression}
+attach(mov)
+library(quantreg)
+fit<-lm(ForeignGross~DomesticGross)
+fit1<-rq(ForeignGross ~ DomesticGross, tau = .5, data = mov)
+plot(mov$ForeignGross~mov$DomesticGross)
+abline(fit)
+abline(fit1, col= 'green')
+```
+
+
+This plot shows the quantile regression line (in green) versus the least squares regression line (in black). The quantile regression line's slope is smaller than the least squares regression line, likely due to the fact that quantile regression is more resistant to outliers and is not as affected by the top-right outlier (Avatar, 2009). Meanwhile, the least squares regression line has a larger slope, due to being more highly affected by the outlier.
+
+In summary, it was shown that my first original hypothesis, "that most movies would have similar domestic grosses and foreign grosses, and that action movies would be the largest-grossing overall," was partially true. While action movies were among the highest-grossing films, most genres actually had higher foreign grosses than domestic grosses, contrary to my original hypothesis. Finally, my second hypothesis, that "quantile regression would provide a more accurate linear approximation of the median of the data since it is more resistant to outliers than least squares regression," was supported by the data.
